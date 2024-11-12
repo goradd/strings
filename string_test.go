@@ -30,13 +30,13 @@ func TestHasOnlyLetters(t *testing.T) {
 }
 
 func TestLcFirst(t *testing.T) {
-	if LcFirst("") != "" {
+	if Decap("") != "" {
 		t.Fail()
 	}
-	if LcFirst("A") != "a" {
+	if Decap("A") != "a" {
 		t.Fail()
 	}
-	if LcFirst("AbcDef") != "abcDef" {
+	if Decap("AbcDef") != "abcDef" {
 		t.Fail()
 	}
 }

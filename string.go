@@ -15,8 +15,8 @@ func EndsWith(s string, ending string) bool {
 	return strings.HasSuffix(s, ending)
 }
 
-// LcFirst makes sure the first character in the string is lower case.
-func LcFirst(s string) string {
+// Decap returns a new string with the first character in the string set to its lower case equivalent.
+func Decap(s string) string {
 	if s == "" {
 		return ""
 	}
