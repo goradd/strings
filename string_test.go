@@ -29,18 +29,6 @@ func TestHasOnlyLetters(t *testing.T) {
 	}
 }
 
-func TestLcFirst(t *testing.T) {
-	if Decap("") != "" {
-		t.Fail()
-	}
-	if Decap("A") != "a" {
-		t.Fail()
-	}
-	if Decap("AbcDef") != "abcDef" {
-		t.Fail()
-	}
-}
-
 func TestStartsWith(t *testing.T) {
 	type args struct {
 	}
@@ -86,34 +74,6 @@ func TestEndsWith(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := EndsWith(tt.s, tt.ending); got != tt.want {
 				t.Errorf("EndsWith() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func ExampleTitle() {
-	a := Title("do_i_seeYou")
-	fmt.Println(a)
-	//Output: Do I See You
-}
-
-func TestTitle(t *testing.T) {
-	tests := []struct {
-		name string
-		s    string
-		want string
-	}{
-		{"empty", "", ""},
-		{"i", "i", "I"},
-		{"iJ", "iJ", "I J"},
-		{"i_j", "i_j", "I J"},
-		{"iJK", "iJK", "I J K"},
-		{"i_J_k", "iJK", "I J K"},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := Title(tt.s); got != tt.want {
-				t.Errorf("Title() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -239,7 +199,7 @@ func TestReplaceStrings(t *testing.T) {
 		// Overlapping search strings
 		{"abcabcabc", []string{"abc", "a"}, []string{"xyz", "x"}, "xyzxyzxyz"},
 		// Search list longer than replace list
-		{"test abc", []string{"test", "abc", "xyz"}, []string{"TEST", "ABC"}, "TEST ABC"},
+		{"test abc", []string{"test", "abc", "xyz"}, []string{"TEST", "ABC", ""}, "TEST ABC"},
 		// Replace list longer than search list (ignored extra)
 		{"test abc", []string{"test", "abc"}, []string{"TEST", "ABC", "EXTRA"}, "TEST ABC"},
 	}
@@ -249,5 +209,28 @@ func TestReplaceStrings(t *testing.T) {
 		if result != tt.expected {
 			t.Errorf("ReplaceStrings(%q, %v, %v) = %q; want %q", tt.input, tt.searchList, tt.replaceList, result, tt.expected)
 		}
+	}
+}
+
+func TestPlural(t *testing.T) {
+	tests := []struct {
+		name  string
+		input string
+		want  string
+	}{
+		{"empty", "", ""},
+		{"dog", "dog", "dogs"},
+		{"person", "person", "people"},
+		{"people", "people", "people"},
+		{"group", "group", "groups"},
+		{"octopus", "octopus", "octopuses"},
+		{"sheep", "sheep", "sheep"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Plural(tt.input); got != tt.want {
+				t.Errorf("Plural() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }

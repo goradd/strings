@@ -107,3 +107,43 @@ func TestCamelToKebab(t *testing.T) {
 		})
 	}
 }
+
+func TestDecap(t *testing.T) {
+	if Decap("") != "" {
+		t.Fail()
+	}
+	if Decap("A") != "a" {
+		t.Fail()
+	}
+	if Decap("AbcDef") != "abcDef" {
+		t.Fail()
+	}
+}
+
+func ExampleTitle() {
+	a := Title("do_i_seeYou")
+	fmt.Println(a)
+	//Output: Do I See You
+}
+
+func TestTitle(t *testing.T) {
+	tests := []struct {
+		name string
+		s    string
+		want string
+	}{
+		{"empty", "", ""},
+		{"i", "i", "I"},
+		{"iJ", "iJ", "I J"},
+		{"i_j", "i_j", "I J"},
+		{"iJK", "iJK", "I J K"},
+		{"i_J_k", "iJK", "I J K"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Title(tt.s); got != tt.want {
+				t.Errorf("Title() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

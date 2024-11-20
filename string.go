@@ -1,6 +1,7 @@
 package strings
 
 import (
+	"github.com/gedex/inflector"
 	"strings"
 	"unicode"
 )
@@ -15,37 +16,10 @@ func EndsWith(s string, ending string) bool {
 	return strings.HasSuffix(s, ending)
 }
 
-// Decap returns a new string with the first character in the string set to its lower case equivalent.
-func Decap(s string) string {
-	if s == "" {
-		return ""
-	}
-	return strings.ToLower(s[:1]) + s[1:]
-}
-
 // Indent will indent every line of the string with a tab
 func Indent(s string) string {
 	s = "\t" + strings.Replace(s, "\n", "\n\t", -1)
 	return strings.TrimRight(s, "\t")
-}
-
-// Title is a more advanced titling operation. It will convert underscores to spaces, and add spaces to CamelCase
-// words.
-func Title(s string) string {
-	s = strings.TrimSpace(strings.Title(strings.Replace(s, "_", " ", -1)))
-	if len(s) <= 1 {
-		return s
-	}
-
-	newString := s[0:1]
-	l := strings.ToLower(s)
-	for i := 1; i < len(s); i++ {
-		if l[i] != s[i] && s[i-1:i] != " " {
-			newString += " "
-		}
-		newString += s[i : i+1]
-	}
-	return newString
 }
 
 // HasOnlyLetters will return false if any of the characters in the string do not pass the unicode.IsLetter test.
@@ -116,29 +90,26 @@ func HasCharType(s string, wantUpper, wantLower, wantDigit, wantPunc, wantSymbol
 	return false
 }
 
-// ReplaceStrings is a memory efficient string replacer, replacing every string
-// in the searchList with the matching string in the replaceList.
+// ReplaceStrings replaces every string in the searchList with the matching string in the replaceList.
+// Will panic if searchList len does not match replaceList len, or anything else goes wrong in the replacement.
 func ReplaceStrings(s string, searchList []string, replaceList []string) string {
-	var b strings.Builder
-	lastIndex := 0
-	for i := 0; i < len(s); {
-		found := false
-		for j, searchStr := range searchList {
-			if strings.HasPrefix(s[i:], searchStr) {
-				found = true
-				b.WriteString(s[lastIndex:i])
-				b.WriteString(replaceList[j])
-				i += len(searchStr)
-				lastIndex = i
-				break
-			}
-		}
-		if !found {
-			i++
-		}
+	var oldnew []string
+	for i, s := range searchList {
+		oldnew = append(oldnew, s, replaceList[i])
 	}
-	if lastIndex < len(s) {
-		b.WriteString(s[lastIndex:])
-	}
-	return b.String()
+	return ReplaceOldNew(s, oldnew...)
+}
+
+// ReplaceOldNew replaces every string in oldNew with the string following it, such that each pair of strings
+// forms an old/new pair.
+func ReplaceOldNew(s string, searchList ...string) string {
+	repl := strings.NewReplacer(searchList...)
+	return repl.Replace(s)
+}
+
+// Plural returns the plural version of the given string.
+// This relies on a third party library, which may or may not be accurate. The goal is to
+// handle the most common cases.
+func Plural(s string) string {
+	return inflector.Pluralize(s)
 }

@@ -79,3 +79,30 @@ func camelToKebabOrSnake(camelCase string, replacement rune) string {
 
 	return string(kebabCase)
 }
+
+// Decap returns a new string with the first character in the string set to its lower case equivalent.
+func Decap(s string) string {
+	if s == "" {
+		return ""
+	}
+	return strings.ToLower(s[:1]) + s[1:]
+}
+
+// Title is a more advanced titling operation. It will convert underscores to spaces, and add spaces to CamelCase
+// words.
+func Title(s string) string {
+	s = strings.TrimSpace(strings.Title(strings.Replace(s, "_", " ", -1)))
+	if len(s) <= 1 {
+		return s
+	}
+
+	newString := s[0:1]
+	l := strings.ToLower(s)
+	for i := 1; i < len(s); i++ {
+		if l[i] != s[i] && s[i-1:i] != " " {
+			newString += " "
+		}
+		newString += s[i : i+1]
+	}
+	return newString
+}
