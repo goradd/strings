@@ -113,3 +113,19 @@ func ReplaceOldNew(s string, searchList ...string) string {
 func Plural(s string) string {
 	return inflector.Pluralize(s)
 }
+
+// Between returns the string between the left and right values in s.
+// If left or right are not in s, all of s is returned.
+func Between(s, left, right string) string {
+	// Find the first and last single quotes
+	start := strings.Index(s, left)
+	end := strings.LastIndex(s, right)
+
+	// If no single quotes are found or they don't form a valid pair, return the entire string
+	if left == "" || right == "" || start == -1 || end == -1 || start == end {
+		return s
+	}
+
+	// Return the substring between the quotes
+	return s[start+len(left) : end]
+}

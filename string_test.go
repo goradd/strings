@@ -234,3 +234,80 @@ func TestPlural(t *testing.T) {
 		})
 	}
 }
+
+// TestBetween tests the Between function
+func TestBetween(t *testing.T) {
+	tests := []struct {
+		name     string
+		s        string
+		left     string
+		right    string
+		expected string
+	}{
+		{
+			name:     "Valid substring between markers",
+			s:        "Hello [world]!",
+			left:     "[",
+			right:    "]",
+			expected: "world",
+		},
+		{
+			name:     "No left marker",
+			s:        "Hello world!",
+			left:     "[",
+			right:    "]",
+			expected: "Hello world!",
+		},
+		{
+			name:     "No right marker",
+			s:        "Hello [world!",
+			left:     "[",
+			right:    "]",
+			expected: "Hello [world!",
+		},
+		{
+			name:     "No markers",
+			s:        "Hello world!",
+			left:     "{",
+			right:    "}",
+			expected: "Hello world!",
+		},
+		{
+			name:     "Empty input string",
+			s:        "",
+			left:     "[",
+			right:    "]",
+			expected: "",
+		},
+		{
+			name:     "Empty left marker",
+			s:        "Hello [world]!",
+			left:     "",
+			right:    "]",
+			expected: "Hello [world]!",
+		},
+		{
+			name:     "Empty right marker",
+			s:        "Hello [world]!",
+			left:     "[",
+			right:    "",
+			expected: "Hello [world]!",
+		},
+		{
+			name:     "Markers overlap",
+			s:        "Hello [[[world]]]",
+			left:     "[[",
+			right:    "]]",
+			expected: "[world]",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := Between(tt.s, tt.left, tt.right)
+			if result != tt.expected {
+				t.Errorf("Between(%q, %q, %q) = %q; want %q", tt.s, tt.left, tt.right, result, tt.expected)
+			}
+		})
+	}
+}
