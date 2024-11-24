@@ -142,7 +142,26 @@ func TestTitle(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := Title(tt.s); got != tt.want {
-				t.Errorf("Title() = %v, want %v", got, tt.want)
+				t.Errorf("ReverseTitle() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestEqualCaseInsensitive(t *testing.T) {
+	tests := []struct {
+		name string
+		s1   string
+		s2   string
+		want bool
+	}{
+		{"match", "aBc", "Abc", true},
+		{"nomatch", "aBd", "Abc", false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := EqualCaseInsensitive(tt.s1, tt.s2); got != tt.want {
+				t.Errorf("EqualCaseInsensitive() = %v, want %v", got, tt.want)
 			}
 		})
 	}

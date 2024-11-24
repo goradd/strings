@@ -106,3 +106,9 @@ func Title(s string) string {
 	}
 	return newString
 }
+
+// EqualCaseInsensitive is a synonym for the strings package EqualFold which provides unicode compliant case-insensitive
+// comparison.
+func EqualCaseInsensitive(s1, s2 string) bool {
+	return strings.EqualFold(s1, s2)
+}
