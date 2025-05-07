@@ -118,6 +118,16 @@ func TestDecap(t *testing.T) {
 	if Decap("AbcDef") != "abcDef" {
 		t.Fail()
 	}
+	if Decap("ID") != "id" {
+		t.Fail()
+	}
+	if Decap("IDs") != "ids" {
+		t.Fail()
+	}
+	if Decap("IDsFor") != "idsFor" {
+		t.Fail()
+	}
+
 }
 
 func ExampleTitle() {
@@ -142,7 +152,7 @@ func TestTitle(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := Title(tt.s); got != tt.want {
-				t.Errorf("ReverseTitle() = %v, want %v", got, tt.want)
+				t.Errorf("ReverseLabel() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -162,6 +172,74 @@ func TestEqualCaseInsensitive(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := EqualCaseInsensitive(tt.s1, tt.s2); got != tt.want {
 				t.Errorf("EqualCaseInsensitive() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestIsSnake(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected bool
+	}{
+		{
+			name:     "Valid snake_case string",
+			input:    "valid_snake_case",
+			expected: true,
+		},
+		{
+			name:     "Contains uppercase letters",
+			input:    "Invalid_Snake_Case",
+			expected: false,
+		},
+		{
+			name:     "Contains special characters",
+			input:    "snake_case@123",
+			expected: false,
+		},
+		{
+			name:     "Contains spaces",
+			input:    "snake case",
+			expected: false,
+		},
+		{
+			name:     "Contains only numbers",
+			input:    "12345",
+			expected: true,
+		},
+		{
+			name:     "Empty string",
+			input:    "",
+			expected: true,
+		},
+		{
+			name:     "Contains consecutive underscores",
+			input:    "snake__case",
+			expected: true,
+		},
+		{
+			name:     "Valid snake_case with numbers",
+			input:    "snake_case_123",
+			expected: true,
+		},
+		{
+			name:     "Valid with trailing underscore",
+			input:    "snake_case_",
+			expected: true,
+		},
+		{
+			name:     "Single underscore",
+			input:    "_",
+			expected: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := IsSnake(tt.input)
+			if result != tt.expected {
+				t.Errorf("IsSnake(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
 		})
 	}

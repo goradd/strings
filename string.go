@@ -111,7 +111,12 @@ func ReplaceOldNew(s string, searchList ...string) string {
 // This relies on a third party library, which may or may not be accurate. The goal is to
 // handle the most common cases.
 func Plural(s string) string {
-	return inflector.Pluralize(s)
+	words := strings.Fields(s) // splits by any whitespace
+	if len(words) == 0 {
+		return ""
+	}
+	words[len(words)-1] = inflector.Pluralize(words[len(words)-1])
+	return strings.Join(words, " ")
 }
 
 // Between returns the string between the left and right values in s.

@@ -80,12 +80,26 @@ func camelToKebabOrSnake(camelCase string, replacement rune) string {
 	return string(kebabCase)
 }
 
-// Decap returns a new string with the first character in the string set to its lower case equivalent.
+// Decap returns a new string with the first character in the string set to its lower case equivalent,
+// and subsequent characters that are capitalized also set to lower case until it encounters a lower case letter.
 func Decap(s string) string {
 	if s == "" {
 		return ""
 	}
-	return strings.ToLower(s[:1]) + s[1:]
+	var b strings.Builder
+	var foundLower bool
+	for i, r := range s {
+		l := unicode.ToLower(r)
+		if i == 0 {
+			b.WriteRune(l)
+		} else if l != r && !foundLower {
+			b.WriteRune(l)
+		} else {
+			foundLower = true
+			b.WriteRune(r)
+		}
+	}
+	return b.String()
 }
 
 // Title is a more advanced titling operation. It will convert underscores to spaces, and add spaces to CamelCase
@@ -111,4 +125,13 @@ func Title(s string) string {
 // comparison.
 func EqualCaseInsensitive(s1, s2 string) bool {
 	return strings.EqualFold(s1, s2)
+}
+
+func IsSnake(s string) bool {
+	for _, r := range s {
+		if !((unicode.IsLetter(r) && unicode.IsLower(r)) || r == '_' || unicode.IsNumber(r)) {
+			return false
+		}
+	}
+	return true
 }

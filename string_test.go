@@ -223,8 +223,9 @@ func TestPlural(t *testing.T) {
 		{"person", "person", "people"},
 		{"people", "people", "people"},
 		{"group", "group", "groups"},
-		{"octopus", "octopus", "octopuses"},
+		{"big octopus", "big octopus", "big octopuses"},
 		{"sheep", "sheep", "sheep"},
+		{"bob person", "bob person", "bob people"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
