@@ -29,6 +29,12 @@ func SnakeToKebab(s string) string {
 	return strings.Replace(s, "_", "-", -1)
 }
 
+// SnakeToCamel converts s from snake_case to CamelCase.
+func SnakeToCamel(s string) string {
+	k := SnakeToKebab(s)
+	return KebabToCamel(k)
+}
+
 // CamelToKebab converts capitalize from CamelCase to kebab-case.
 // If it encounters a character that is not legitimate camel case,
 // it ignores it (like numbers, spaces, etc.).
@@ -105,6 +111,32 @@ func Decap(s string) string {
 // Title is a more advanced titling operation. It will convert underscores to spaces, and add spaces to CamelCase
 // words.
 func Title(s string) string {
+	s = strings.TrimSpace(strings.Title(strings.Replace(s, "_", " ", -1)))
+	if len(s) <= 1 {
+		return s
+	}
+
+	newString := s[0:1]
+	l := strings.ToLower(s)
+	i := 1
+	for i < len(s) {
+		if l[i] != s[i] && s[i-1:i] != " " {
+			// is a capital.
+			newString += " "
+			// Group capitals until we get a lower case
+			for i < len(s)-1 && l[i] != s[i] && l[i+1] != s[i+1] {
+				newString += s[i : i+1]
+				i++
+			}
+		}
+		newString += s[i : i+1]
+		i++
+	}
+	return newString
+}
+
+// Camel converts a string to camel case.
+func Camel(s string) string {
 	s = strings.TrimSpace(strings.Title(strings.Replace(s, "_", " ", -1)))
 	if len(s) <= 1 {
 		return s

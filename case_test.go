@@ -118,7 +118,7 @@ func TestDecap(t *testing.T) {
 	if Decap("AbcDef") != "abcDef" {
 		t.Fail()
 	}
-	if Decap("ID") != "id" {
+	if Decap("Value") != "id" {
 		t.Fail()
 	}
 	if Decap("IDs") != "ids" {
@@ -146,13 +146,16 @@ func TestTitle(t *testing.T) {
 		{"i", "i", "I"},
 		{"iJ", "iJ", "I J"},
 		{"i_j", "i_j", "I J"},
-		{"iJK", "iJK", "I J K"},
-		{"i_J_k", "iJK", "I J K"},
+		{"iJK", "iJK", "I JK"},
+		{"i_J_k", "i_J_k", "I J K"},
+		{"ManagerID", "ManagerID", "Manager ID"},
+		{"BobTheGrocer", "BobTheGrocer", "Bob The Grocer"},
+		{"ILike Kiwis", "ILike Kiwis", "I Like Kiwis"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := Title(tt.s); got != tt.want {
-				t.Errorf("ReverseLabel() = %v, want %v", got, tt.want)
+				t.Errorf("Title() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -242,5 +245,31 @@ func TestIsSnake(t *testing.T) {
 				t.Errorf("IsSnake(%q) = %v; want %v", tt.input, result, tt.expected)
 			}
 		})
+	}
+}
+
+func TestSnakeToCamel(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{"", ""},
+		{"hello_world", "HelloWorld"},
+		{"a_b_c", "ABC"},
+		{"this_is_a_test", "ThisIsATest"},
+		{"snake_case", "SnakeCase"},
+		{"alreadycamel", "Alreadycamel"}, // Will depend on behavior
+		{"_leading_underscore", "LeadingUnderscore"},
+		{"trailing_underscore_", "TrailingUnderscore"},
+		{"__multiple__underscores__", "MultipleUnderscores"},
+		{"with_numbers_123", "WithNumbers123"},
+		{"a", "A"},
+	}
+
+	for _, tt := range tests {
+		result := SnakeToCamel(tt.input)
+		if result != tt.expected {
+			t.Errorf("SnakeToCamel(%q) = %q; want %q", tt.input, result, tt.expected)
+		}
 	}
 }
